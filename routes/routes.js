@@ -1,3 +1,12 @@
+require("jsdom").env("", function(err, window) {
+    if (err) {
+        console.error(err);
+        return;
+    }
+
+    var $ = require("jquery")(window);
+});
+
 var appRouter = function (app) {
   app.get("/", function(req, res) {
     var data = ({
@@ -9,6 +18,7 @@ var appRouter = function (app) {
   });
   });
 }
+
 
 
 
