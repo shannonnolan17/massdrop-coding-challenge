@@ -1,7 +1,5 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var dbConfig = require('./config/database.config.js');
-var mongoose = require('mongoose');
 
 // create express app
 var app = express();
@@ -12,7 +10,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
 
-mongoose.connect('./config/database.config.js');
+var dbConfig = require('./config/database.config.js');
+var mongoose = require('mongoose');
+mongoose.connect(dbConfig.url, {
+  useMongoClient: true
+});
 
 mongoose.connection.on('error', function() {
     console.log('Could not connect to the database. Exiting now...');
