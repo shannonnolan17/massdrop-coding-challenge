@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/shannonnolan17/massdrop-coding-challenge#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.16.2"
   }
 }
