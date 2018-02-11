@@ -1,23 +1,19 @@
-require("jsdom").env("", function(err, window) {
-    if (err) {
-        console.error(err);
-        return;
-    }
-
-    var $ = require("jquery")(window);
-});
+var request = require('request');
+var cheerio = require('cheerio');
 
 var appRouter = function (app) {
   app.get("/", function(req, res) {
-    var data = ({
-      $.get('http://www.google.com' + name, function(response) {
-        console.log(response);
-      });
-    });
-    res.status(200).send(data);
+    // res.status(200).send("Welcome to our restful API");
+
+  request('https://www.google.com', function (error, response, html) {
+    if (!error && response.statusCode == 200) {
+      console.log(html);
+    }
   });
+
+    // res.status(200).send(data);
   });
-}
+  };
 
 
 
