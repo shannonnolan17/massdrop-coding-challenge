@@ -30,7 +30,7 @@ app.get('/', function(req, res){
     res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
 });
 
-// require('./app/routes/note.routes.js')(app);
+require('./app/routes/website.routes.js')(app);
 
 // listen for requests
 app.listen(3000, function(){
