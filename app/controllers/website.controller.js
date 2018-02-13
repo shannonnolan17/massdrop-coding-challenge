@@ -1,7 +1,7 @@
-const kue = require('kue')
+const kue = require('kue');
 const queue = kue.createQueue({
   redis: process.env.REDIS_URL
-})
+});
 var request = require('request');
 var cheerio = require('cheerio');
 var Website = require('../models/website.model.js');
@@ -12,12 +12,16 @@ exports.create = function(req, res) {
       res.status(400).send({message: "Website cannot be empty"});
     }
 
-    var site = {content: req.body.title}
+    var site = {content: req.body.title};
     //take the request and add to job queue
-    var job = queue.create(site);
-      }).save( function(err){
-         if( !err ) console.log( job.id );
-      });
+    function newJob (){
+     var job = jobs.create(site);
+     job.save();
+    }
+    jobs.process(site, function (job, done){
+     console.log("Job", job.id, "is done");
+     done && done();
+    });
 
     //take the website from request and scrape the html
     var options = {
@@ -47,8 +51,8 @@ exports.create = function(req, res) {
         res.send(data);
       }
     });
-
 };
+
 
 exports.findOne = function(req, res) {
     // Find a single Website with an id

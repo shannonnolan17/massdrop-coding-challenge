@@ -10,9 +10,9 @@ app.use(bodyParser.json())
 
 var dbConfig = require('./config/database.config.js');
 var mongoose = require('mongoose');
-// const db = mongoose.connect(dbConfig.url, {
-//   useMongoClient: true
-// });
+const db = mongoose.connect(dbConfig.url, {
+
+});
 
 mongoose.connection.once('open', function() {
     console.log("Successfully connected to the database");
