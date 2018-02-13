@@ -1,9 +1,7 @@
 const kue = require('kue');
-const queue = kue.createQueue({
-  redis: process.env.REDIS_URL
-});
-var request = require('request');
-var cheerio = require('cheerio');
+const jobs = kue.createQueue();
+const rp = require('request-promise');
+const cheerio = require('cheerio');
 var Website = require('../models/website.model.js');
 
 exports.create = function(req, res) {
