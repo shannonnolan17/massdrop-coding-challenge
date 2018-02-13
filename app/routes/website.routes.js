@@ -1,6 +1,6 @@
 module.exports = function(app) {
 
-    var websites = require('../controllers/note.controller.js');
+    var websites = require('../controllers/website.controller.js');
 
     // Create a new Note
     app.post('/websites', websites.create);
