@@ -2,25 +2,24 @@ var Website = require('../models/website.model.js');
 
 exports.create = function(req, res) {
     // Create and Save a new Website
+    if(!req.body.content) {
+        res.status(400).send({message: "Note can not be empty"});
+    }
+    var note = new Note({title: req.body.title || "Untitled Note", content: req.body.content});
 
-};
-
-exports.findAll = function(req, res) {
-    // Retrieve and return all Websites from the database.
+    note.save(function(err, data) {
+        console.log(data);
+        if(err) {
+            console.log(err);
+            res.status(500).send({message: "Some error occurred while creating the Note."});
+        } else {
+            res.send(data);
+        }
+    });
 
 };
 
 exports.findOne = function(req, res) {
-    // Find a single Website with a WebsiteId
-
-};
-
-exports.update = function(req, res) {
-    // Update a Website identified by the WebsiteId in the request
-
-};
-
-exports.delete = function(req, res) {
-    // Delete a Website with the specified websiteId in the request
+    // Find a single Website with a JobId
 
 };

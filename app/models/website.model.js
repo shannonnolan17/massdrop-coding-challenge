@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 
 var WebsiteSchema = mongoose.Schema({
-    title: String,
-    content: String
+    content: String,
+    jobId: Number
 }, {
     timestamps: true
 });

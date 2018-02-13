@@ -13,9 +13,9 @@ app.use(bodyParser.json())
 // Configuring the database
 var dbConfig = require('./config/database.config.js');
 var mongoose = require('mongoose');
-const db = mongoose.connect(dbConfig.url, {
-  useMongoClient: true
-});
+// const db = mongoose.connect(dbConfig.url, {
+//   useMongoClient: true
+// });
 
 mongoose.connection.once('open', function() {
     console.log("Successfully connected to the database");
@@ -27,7 +27,7 @@ mongoose.connection.on('error', function() {
 
 // define a simple route
 app.get('/', function(req, res){
-    res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
+    res.json({"message": "Welcome to the job queue"});
 });
 
 require('./app/routes/website.routes.js')(app);
