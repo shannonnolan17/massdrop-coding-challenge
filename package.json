@@ -25,6 +25,7 @@
     "kue": "^0.6.2",
     "mongodb": "^3.0.2",
     "mongoose": "^5.0.4",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
   }
 }
