@@ -1,16 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
-// create express app
+
 var app = express();
 
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// parse application/json
 app.use(bodyParser.json())
 
-// Configuring the database
 var dbConfig = require('./config/database.config.js');
 var mongoose = require('mongoose');
 // const db = mongoose.connect(dbConfig.url, {
@@ -25,14 +22,12 @@ mongoose.connection.on('error', function() {
     process.exit();
 });
 
-// define a simple route
 app.get('/', function(req, res){
     res.json({"message": "Welcome to the job queue"});
 });
 
 require('./app/routes/website.routes.js')(app);
 
-// listen for requests
 app.listen(3000, function(){
     console.log("Server is listening on port 3000");
 });

@@ -6,5 +6,6 @@ module.exports = function(app) {
     app.post('/websites', websites.create);
 
     // find website id
+
     app.get('/websites/:websiteId', websites.findOne);
 }
