@@ -24,7 +24,7 @@ exports.create = function(req, res) {
     });
 
     //take the website from request and scrape the html
-      var siteData= request({
+      request({
         method: 'GET',
         url: req.body.content
       }, function(err, response, body) {
@@ -33,16 +33,14 @@ exports.create = function(req, res) {
 
       });
       //save the result of scrape and jobId to database
-        var website = new Website({content: siteData});
+        var website = new Website({content: req.body.content});
 
         //save website to database
-        website.save(function(err) {
+        website.save(function(err, data) {
           res.send({message: "Your id is " + website.id})
           if(err) { //error handling
             console.log(err);
             res.status(500).send({message: "Some error occurred while creating the Website"});
-          } else {
-            res.send(data);
           }
         });
 
