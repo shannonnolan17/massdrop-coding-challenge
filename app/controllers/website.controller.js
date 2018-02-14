@@ -24,13 +24,16 @@ exports.create = function(req, res) {
     });
 
     //take the website from request and scrape the html
+      var siteData= request({
+        method: 'GET',
+        url: req.body.content
+      }, function(err, response, body) {
+        if (err) return console.error(err);
+        console.log(body);
 
-    request(site, function(err, resp, html) {
-      if (!err){
-        const $ = cheerio.load(html);
-
+      });
       //save the result of scrape and jobId to database
-        var website = new Website({content: $});
+        var website = new Website({content: siteData});
 
         //save website to database
         website.save(function(err) {
@@ -42,8 +45,7 @@ exports.create = function(req, res) {
             res.send(data);
           }
         });
-      }
-    });
+
 };
 
 
