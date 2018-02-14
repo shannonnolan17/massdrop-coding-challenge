@@ -1,7 +1,9 @@
 const kue = require('kue');
 const jobs = kue.createQueue();
 const rp = require('request-promise');
+const axios = require('axios');
 const cheerio = require('cheerio');
+const request = require('request');
 var Website = require('../models/website.model.js');
 
 exports.create = function(req, res) {
@@ -10,10 +12,10 @@ exports.create = function(req, res) {
       res.status(400).send({message: "Website cannot be empty"});
     }
 
-    var site = {content: req.body.title};
+    var site = {content: req.body.content};
     //take the request and add to job queue
     function newJob (){
-     var job = jobs.create(site);
+     var job = jobs.create(req.body.content);
      job.save();
     }
     jobs.process(site, function (job, done){
@@ -22,34 +24,28 @@ exports.create = function(req, res) {
     });
 
     //take the website from request and scrape the html
-    var options = {
-      uri: site,
-      transform: function (body) {
-        return cheerio.load(body);
-      }
-    };
-    rp(options)
-      .then(($) => {
-        console.log($);
-      })
-      .catch((err) => {
-        console.log(err);
-    });
 
-    //save the result of scrape and jobId to database
-    var website = new Website({content: options, jobId: job.id});
+    request(site, function(err, resp, html) {
+      if (!err){
+        const $ = cheerio.load(html);
 
-    //save website to database
-    website.save(function(err, data) {
-      console.log(data);
-      if(err) { //error handling
-        console.log(err);
-        res.status(500).send({message: "Some error occurred while creating the Website"});
-      } else {
-        res.send(data);
+      //save the result of scrape and jobId to database
+        var website = new Website({content: $});
+
+        //save website to database
+        website.save(function(err) {
+          res.send({message: "Your id is " + website.id})
+          if(err) { //error handling
+            console.log(err);
+            res.status(500).send({message: "Some error occurred while creating the Website"});
+          } else {
+            res.send(data);
+          }
+        });
       }
     });
 };
+
 
 
 exports.findOne = function(req, res) {

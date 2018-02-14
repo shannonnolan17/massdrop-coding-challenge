@@ -12,9 +12,7 @@ var dbConfig = require('./config/database.config.js');
 
 var mongoose = require('mongoose');
 
-const db = mongoose.connect('mongodb://localhost:27017/massdrop',{
-  useMongoClient: true
-});
+const db = mongoose.connect('mongodb://localhost:27017/massdrop');
 
 mongoose.connection.once('open', function() {
     console.log("Successfully connected to the database");
