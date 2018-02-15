@@ -1,5 +1,3 @@
-const kue = require('kue');
-const jobs = kue.createQueue();
 const rp = require('request-promise');
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -14,14 +12,63 @@ exports.create = function(req, res) {
 
     var site = {content: req.body.content};
     //take the request and add to job queue
-    function newJob (){
-     var job = jobs.create(req.body.content);
-     job.save();
+
+
+
+
+if (process.env.NODE_ENV === 'production') {
+  redisConfig = {
+    redis: {
+      port: process.env.REDIS_PORT,
+      host: process.env.REDIS_HOST,
+      auth: process.env.REDIS_PASS
     }
-    jobs.process(site, function (job, done){
-     console.log("Job", job.id, "is done");
-     done && done();
+  };
+} else {
+  redisConfig = {};
+}
+
+const queue = require('kue').createQueue(redisConfig);
+
+queue.on('ready', () => {
+  console.info('Queue is ready!');
+});
+
+queue.on('error', (err) => {
+  console.error('There was an error in the main queue!');
+  console.error(err);
+});
+function createJob(data, done) {
+  queue.create('newJob', data)
+    .priority('critical')
+    .attempts(8)
+    .backoff(true)
+    .removeOnComplete(false)
+    .save((err) => {
+      if (err) {
+        console.error(err);
+        done(err);
+      }
+      if (!err) {
+        done();
+      }
     });
+}
+
+queue.process('newJob', (job, done) => {
+  // This is the data we sent into the #create() function call earlier
+  // We're setting it to a constant here so we can do some guarding against accidental writes
+  const data = job.data;
+  //... do other stuff with the data.
+});
+module.exports = {
+  create: (data, done) => {
+    createJob(data, done);
+  }
+};
+
+
+
 
     //take the website from request and scrape the html
       request({
