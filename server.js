@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-
+var kue = require('kue');
+kue.app.listen(3000);
 
 var app = express();
 
@@ -22,12 +23,9 @@ mongoose.connection.on('error', function() {
 
 });
 
-app.get('/', function(req, res){
-    res.json({"message": "Welcome to the job queue"});
-});
+// app.get('/active', function(req, res){
+//     res.json({"message": "Welcome to the job queue"});
+// });
 
 require('./app/routes/website.routes.js')(app);
 
-app.listen(3000, function(){
-    console.log("Server is listening on port 3000");
-});
