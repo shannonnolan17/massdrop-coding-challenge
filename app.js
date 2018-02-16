@@ -1,2 +1,2 @@
-const kue = require('kue');
-app.use('./app/controllers/website.controller.js', kue.app);
+var kue = require('kue');
+kue.app.listen(3000);

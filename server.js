@@ -1,5 +1,17 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var kue = require('kue');
+var express = require('express');
+var kueUiExpress = require('kue-ui-express');
+var app = express();
+
+kue.createQueue();
+
+kueUiExpress(app, '/kue/', '/kue-api/');
+
+app.use('/kue-api/', kue.app);
+
+app.listen(3000);
 
 
 var app = express();
