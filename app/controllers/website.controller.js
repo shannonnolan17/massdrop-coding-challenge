@@ -57,6 +57,14 @@ queue.process('newJob', (job, done) => {
   // This is the data we sent into the #create() function call earlier
   // We're setting it to a constant here so we can do some guarding against accidental writes
   const data = job.data;
+    request({
+      method: 'GET',
+      url: data
+    }, function(err, response, body) {
+      if (err) return console.error(err);
+      res.send(body);
+
+    });
   //... do other stuff with the data.
 });
 module.exports = {
@@ -69,25 +77,17 @@ module.exports = {
 
 
     //take the website from request and scrape the html
-      request({
-        method: 'GET',
-        url: req.body.content
-      }, function(err, response, body) {
-        if (err) return console.error(err);
-        console.log(body);
+      // //save the result of scrape and jobId to database
+      //   var website = new Website({content: req.body.content});
 
-      });
-      //save the result of scrape and jobId to database
-        var website = new Website({content: req.body.content});
-
-        //save website to database
-        website.save(function(err, data) {
-          res.send({message: "Your id is " + website.id})
-          if(err) { //error handling
-            console.log(err);
-            res.status(500).send({message: "Some error occurred while creating the Website"});
-          }
-        });
+      //   //save website to database
+      //   website.save(function(err, data) {
+      //     res.send({message: "Your id is " + website.id})
+      //     if(err) { //error handling
+      //       console.log(err);
+      //       res.status(500).send({message: "Some error occurred while creating the Website"});
+      //     }
+      //   });
 
 };
 
