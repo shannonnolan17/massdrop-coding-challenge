@@ -34,16 +34,25 @@ queue.on('error', (err) => {
 function createJob(data, done) {
   queue.create('newJob', data)
     .priority('critical')
-    .attempts(8)
-    .backoff(true)
-    .removeOnComplete(false)
+    .on('completed', (result) => {
+    console.log('Job is complete:', result);
+    })
+    .on('failed', (errorMessage) => {
+    console.log('Job could not process');
+    })
+    .on('progress', (progress, data) => {
+    console.log('\r  job #' + job.id + ' ' + progress + '% complete: ', data);
+    })
     .save((err) => {
       if (err) {
         console.error(err);
         done(err);
       }
       if (!err) {
-        done();
+        res.send({
+        message: 'Your job was created. Here is the job id: ' + job.id,
+        success: true
+      });
       }
     });
 }

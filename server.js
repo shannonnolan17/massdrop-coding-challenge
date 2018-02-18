@@ -11,17 +11,23 @@ app.use(bodyParser.json())
 
 var dbConfig = require('./config/database.config.js');
 
-var mongoose = require('mongoose');
-
-const db = mongoose.connect('mongodb://localhost:27017/massdrop');
-
-mongoose.connection.once('open', function() {
-    console.log("Successfully connected to the database");
+const redis = require('redis');
+const client = redis.createClient();
+client.on('connect', () =>{
+  console.log('Redis connection established');
 })
-mongoose.connection.on('error', function() {
-    console.log('Could not connect to the database. Exiting now...');
 
-});
+// var mongoose = require('mongoose');
+
+// const db = mongoose.connect('mongodb://localhost:27017/massdrop');
+
+// mongoose.connection.once('open', function() {
+//     console.log("Successfully connected to the database");
+// })
+// mongoose.connection.on('error', function() {
+//     console.log('Could not connect to the database. Exiting now...');
+
+// });
 
 // app.get('/active', function(req, res){
 //     res.json({"message": "Welcome to the job queue"});
