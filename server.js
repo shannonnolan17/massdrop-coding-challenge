@@ -1,6 +1,7 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var kue = require('kue');
+const express = require('express');
+const bodyParser = require('body-parser');
+const kue = require('kue');
+const websites = require('./app/routes/website.routes.js')
 kue.app.listen(3000);
 
 var app = express();
@@ -29,9 +30,12 @@ client.on('connect', () =>{
 
 // });
 
-// app.get('/active', function(req, res){
-//     res.json({"message": "Welcome to the job queue"});
-// });
+app.use('/websites', websites);
+app.use((req, res, next) => {
+  let err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 require('./app/routes/website.routes.js')(app);
 

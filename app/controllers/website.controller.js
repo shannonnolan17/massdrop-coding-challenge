@@ -2,27 +2,13 @@ const rp = require('request-promise');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const request = require('request');
-var Website = require('../models/website.model.js');
+const Website = require('../models/website.model.js');
 
 exports.create = function(req, res) {
     if(!req.body.content) {
       res.status(400).send({message: "Website cannot be empty"});
     }
 
-//     var site = {content: req.body.content};
-//     //take the request and add to job queue
-
-if (process.env.NODE_ENV === 'production') {
-  redisConfig = {
-    redis: {
-      port: process.env.REDIS_PORT,
-      host: process.env.REDIS_HOST,
-      auth: process.env.REDIS_PASS
-    }
-  };
-} else {
-  redisConfig = {};
-}
 
 const queue = require('kue').createQueue(redisConfig);
 
@@ -60,10 +46,10 @@ function createJob(data, done) {
 queue.process('newJob', (job, done) => {
   const data = job.data;
     request({
-      method: 'POST',
+      method: 'GET',
       url: req.body.content
     }, function(err, response, body) {
-      if (err) return console.error(err);
+      if (!err) return console.error(err);
       res.send(body);
         website.save(body)
         var website = new Website({content: response});
