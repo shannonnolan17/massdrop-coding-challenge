@@ -5,11 +5,11 @@ const websites = require('./app/routes/website.routes.js');
 const websitesController = require('./app/controllers/website.controller.js');
 
 var app = express();
-app.listen(3000);
 
-// app.use(bodyParser.urlencoded({ extended: true }))
 
-// app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(bodyParser.json())
 
 // var dbConfig = require('./config/database.config.js');
 
@@ -31,8 +31,8 @@ client.on('connect', () =>{
 
 // });
 
+app.listen(3000);
 app.use('/websites', websites);
-
 
 // require('./app/routes/website.routes.js')(app);
 
