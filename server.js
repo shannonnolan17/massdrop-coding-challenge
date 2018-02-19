@@ -2,15 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const kue = require('kue');
 const websites = require('./app/routes/website.routes.js')
+const websitesController = require('./app/controllers/website.controller.js')
 kue.app.listen(3000);
 
 var app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }))
+// app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
 
-var dbConfig = require('./config/database.config.js');
+// var dbConfig = require('./config/database.config.js');
 
 const redis = require('redis');
 const client = redis.createClient();
