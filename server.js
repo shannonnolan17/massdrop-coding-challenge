@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const kue = require('kue');
-const websites = require('./app/routes/website.routes.js')
-const websitesController = require('./app/controllers/website.controller.js')
-kue.app.listen(3000);
+const websites = require('./app/routes/website.routes.js');
+const websitesController = require('./app/controllers/website.controller.js');
 
 var app = express();
+app.listen(3000);
 
 // app.use(bodyParser.urlencoded({ extended: true }))
 

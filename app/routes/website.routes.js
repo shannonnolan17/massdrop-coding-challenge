@@ -1,8 +1,10 @@
 'use strict';
+
+var router = require('express').Router();
 module.exports = function(app) {
     // Create a new website
-  const websites = require('./controllers/website.controller.js');
-    app.post('/websites', function(req, res) {
+  const websites = require('../controllers/website.controller.js');
+    router.post('/api', function(req, res) {
       const content = req.body;
       websites.create(content, (err) => {
         if (err) {
