@@ -31,11 +31,7 @@ client.on('connect', () =>{
 // });
 
 app.use('/websites', websites);
-app.use((req, res, next) => {
-  let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
 
-require('./app/routes/website.routes.js')(app);
+
+// require('./app/routes/website.routes.js')(app);
 
