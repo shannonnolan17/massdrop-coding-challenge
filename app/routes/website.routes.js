@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(app) {
     // Create a new website
-  const websites = require('../controllers/website.controller.js');
+  const websites = require('./controllers/website.controller.js');
     app.post('/websites', function(req, res) {
       const content = req.body;
       websites.create(content, (err) => {
