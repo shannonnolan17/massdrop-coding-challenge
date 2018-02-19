@@ -2,70 +2,80 @@ const rp = require('request-promise');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const request = require('request');
-var Website = require('../models/website.model.js');
+const Website = require('../models/website.model.js');
+
+    let redisConfig;
+    if (process.env.NODE_ENV === 'production') {
+      redisConfig = {
+        redis: {
+          port: process.env.REDIS_PORT,
+          host: process.env.REDIS_HOST,
+          auth: process.env.REDIS_PASS,
+          options: {
+            no_ready_check: false
+          }
+        }
+      };
+    } else {
+      redisConfig = {};
+    }
 
 exports.create = function(req, res) {
     if(!req.body.content) {
       res.status(400).send({message: "Website cannot be empty"});
     }
 
-//     var site = {content: req.body.content};
-//     //take the request and add to job queue
+    const queue = require('kue').createQueue(redisConfig);
 
-if (process.env.NODE_ENV === 'production') {
-  redisConfig = {
-    redis: {
-      port: process.env.REDIS_PORT,
-      host: process.env.REDIS_HOST,
-      auth: process.env.REDIS_PASS
+    queue.on('error', (err) => {
+      console.error('There was an error!');
+      console.error(err);
+    });
+
+    function createJob(data, done) {
+      queue.create('newJob', data)
+        .priority('critical')
+        .on('completed', (result) => {
+        console.log('Job is complete:', result);
+        })
+        .on('failed', (errorMessage) => {
+        console.log('Job could not process');
+        })
+        .on('progress', (progress, data) => {
+        console.log('\r  job #' + job.id + ' ' + progress + '% complete: ', data);
+        })
+        .save((err) => {
+          if (err) {
+            console.error(err);
+            done(err);
+          }
+          if (!err) {
+            res.send({
+            message: 'Your job was created. Here is the job id: ' + job.id,
+            success: true
+          });
+          }
+        });
     }
-  };
-} else {
-  redisConfig = {};
-}
 
-const queue = require('kue').createQueue(redisConfig);
+    queue.process('newJob', (job, done) => {
+      const data = job.data;
+        request({
+          method: 'GET',
+          url: req.body.content
+        }, function(err, response, body) {
+          if (!err) return console.error(err);
+          res.send(body);
+            website.save(body)
+            var website = new Website({content: response});
 
-queue.on('error', (err) => {
-  console.error('There was an error!');
-  console.error(err);
-});
-
-function createJob(data, done) {
-  queue.create('newJob', data)
-    .priority('critical')
-    .attempts(8)
-    .backoff(true)
-    .removeOnComplete(false)
-    .save((err) => {
-      if (err) {
-        console.error(err);
-        done(err);
-      }
-      if (!err) {
-        done();
-      }
-    });
-}
-
-queue.process('newJob', (job, done) => {
-  const data = job.data;
-    request({
-      method: 'POST',
-      url: req.body.content
-    }, function(err, response, body) {
-      if (err) return console.error(err);
-      res.send(body);
-        website.save(body)
-        var website = new Website({content: response});
-
-          // if(err) {
-          //   console.log(err);
-          //   res.status(500).send({message: "Some error occurred while creating the Website"});
-          // }
+              // if(err) {
+              //   console.log(err);
+              //   res.status(500).send({message: "Some error occurred while creating the Website"});
+              // }
 
 
-    });
+        });
 
 });
 // module.exports = {
